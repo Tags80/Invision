@@ -27,3 +27,8 @@ void MainWindow::on_pushButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
 }
+
+void MainWindow::on_actionCrop_Tool_triggered()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
