@@ -15,9 +15,11 @@ CONFIG += c++11
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    mcroplabel.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    mcroplabel.h
 
 FORMS    += mainwindow.ui
 

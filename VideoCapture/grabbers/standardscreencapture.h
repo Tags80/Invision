@@ -14,6 +14,10 @@ public:
     double getPreferredFPS();
     bool startRecording();
     bool stopRecording();
+    QString stringID();
+    QList<QString> getScreenNames();
+
+    static QPixmap getSingleFrame(int monitorNumber);
 
 protected slots:
     virtual void captureFrame();
