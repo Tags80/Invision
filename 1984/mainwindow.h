@@ -5,8 +5,10 @@
 #include <QMessageBox>
 #include <QImageWriter>
 #include <QStandardPaths>
+#include <QSystemTrayIcon>
 #include <QDir>
 #include "grabbers/standardscreencapture.h"
+#include "videocapture.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +22,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+    void resizeEvent(QResizeEvent *event);
 private slots:
     void on_actionExit_triggered();
 
@@ -33,13 +37,18 @@ private slots:
 
     void on_cancelButton_2_clicked();
 
+    void on_cancelButton_clicked();
+
+    void updateDisplayConfiguration();
+    void on_actionHide_notTriggered(bool hide);
 private:
     Ui::MainWindow *ui;
     QPixmap capture;
     QPixmap crop;
-
     void shootScreen();
     void savePixmap();
+    void createSystemTrayIcon();
+    QSystemTrayIcon * trayIcon;
 };
 
 #endif // MAINWINDOW_H

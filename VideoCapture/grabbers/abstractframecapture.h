@@ -43,6 +43,8 @@ public:
     virtual bool startRecording() = 0;
     virtual bool stopRecording() = 0;
 
+    virtual bool isAvailable() = 0;
+
     virtual QString stringID() = 0;
     static AbstractFrameCapture* fromStringID();
 

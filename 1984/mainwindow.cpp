@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "videocapture.h"
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -8,14 +8,28 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //always start on screenshot page
+    ui->stackedWidget->setCurrentIndex(0);
+
+    updateDisplayConfiguration();
+    createSystemTrayIcon();
+
 
     //setup the combobox with the image avaliable image types
-       for(int i = 0; i < QImageWriter::supportedImageFormats().size(); i++)
-       {
-           ui->comboBox->insertItem(i,QImageWriter::supportedImageFormats().at(i));
-       // nees to have the selections slimmed down a bit.
-       }
+    for(int i = 0; i < QImageWriter::supportedImageFormats().size(); i++)
+    {
+        ui->comboBox->insertItem(i,QImageWriter::supportedImageFormats().at(i));
+        // needs to have the selections slimmed down a bit.
+    }
 
+
+
+
+
+
+//    QDesktopWidget *widget = QApplication::desktop();
+//    //connect signals and slots that need to be monitored
+//    connect(widget,SIGNAL(screenCountChanged(int)), this, SLOT(updateDisplayConfiguration())); //this should be tested...but I don't feel like it right now. //Shit works. Just wanted to leave this comment.
 
 }
 
@@ -24,6 +38,62 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+
+void MainWindow::resizeEvent(QResizeEvent *event){
+    Q_UNUSED(event);
+    if(ui->stackedWidget->currentIndex() == 0){
+        QPixmap temp = capture.scaled(ui->labelScreenShot->size());
+        ui->labelScreenShot->setPixmap(temp);
+    }
+
+
+}
+
+void MainWindow::createSystemTrayIcon()
+{
+    if(QSystemTrayIcon::isSystemTrayAvailable())
+    {
+        qDebug() << "SystemTrayIcon Avaliable";
+        trayIcon = new QSystemTrayIcon ();
+        trayIcon->setIcon(this->windowIcon());
+
+
+        //construct trayicon menu
+        QMenu *trayMenu = new QMenu();
+
+        //construct enabled menu
+        QAction *enabledAction = new QAction(this);
+        enabledAction->setText("Enabled");
+        enabledAction->setCheckable(true);
+        enabledAction->setChecked(true);
+        enabledAction->setEnabled(false);
+        trayMenu->addAction(enabledAction);
+
+        //show and hide
+        QAction *hideAction = new QAction(this);
+        hideAction->setText("Show in Taskbar");
+        hideAction->setCheckable(true);
+        hideAction->setChecked(true);
+        connect(hideAction,SIGNAL(toggled(bool)),this,SLOT(on_actionHide_notTriggered(bool)));
+        trayMenu->addAction(hideAction);
+
+
+        //construct terminate
+        QAction *exitAction = new QAction(this);
+        exitAction->setText("Terminate");
+        exitAction->setEnabled(true);
+        connect(exitAction, SIGNAL(triggered(bool)), this, SLOT(close()));
+        trayMenu->addAction(exitAction);
+
+
+        trayIcon->setContextMenu(trayMenu);
+        trayIcon->show();
+
+    }
+    else
+        qDebug() << "SystemTrayIcon NOT Avaliable";
+}
 
 
 void MainWindow::on_actionExit_triggered()
@@ -35,6 +105,8 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_actionCrop_Tool_triggered()
 {
+    if(capture.isNull()) return;
+
     ui->stackedWidget->setCurrentIndex(1);
     ui->labelCrop->setPixmap(capture);
 
@@ -100,3 +172,22 @@ void MainWindow::on_cancelButton_2_clicked()
     ui->labelCrop->clear();
     ui->stackedWidget->setCurrentIndex(0);
 }
+
+void MainWindow::on_cancelButton_clicked()
+{
+    ui->lineEdit->clear();
+    ui->labelScreenShot->clear();
+    capture = QPixmap();
+}
+
+void MainWindow::updateDisplayConfiguration()
+{
+
+}
+
+void MainWindow::on_actionHide_notTriggered(bool hide)
+{
+    this->setHidden(!hide);
+}
+
+

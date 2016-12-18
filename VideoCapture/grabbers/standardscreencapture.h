@@ -15,10 +15,10 @@ public:
     bool startRecording();
     bool stopRecording();
     QString stringID();
-    QList<QString> getScreenNames();
 
     static QPixmap getSingleFrame(int monitorNumber);
 
+    bool isAvailable();
 protected slots:
     virtual void captureFrame();
 

@@ -60,6 +60,11 @@ bool StandardScreenCapture::startRecording(){
 
 }
 
+
+bool StandardScreenCapture::isAvailable(){
+    return true;
+}
+
 ///
 /// \brief StandardScreenCapture::stopRecording stops grabbing frames from this source
 /// \return true if frames have stopped being captured
@@ -75,18 +80,6 @@ bool StandardScreenCapture::stopRecording()
     timer->stop();
     return !timer->isActive();
 
-}
-
-QList<QString> StandardScreenCapture::getScreenNames()
-{
-    QList<QString> ret;
-    foreach (QScreen* s, screens) {
-        ret.push_back(s->name());
-    }
-
-    ret.push_front("Virtual Screen");
-
-    return ret;
 }
 
 QPixmap StandardScreenCapture::getSingleFrame(int monitorNumber)
