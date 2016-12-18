@@ -119,7 +119,7 @@ void MainWindow::on_actionCapture_triggered()
 
 void MainWindow::shootScreen(){
     ui->stackedWidget->setCurrentIndex(0);
-    capture = StandardScreenCapture::getSingleFrame(0);
+    capture = QGuiApplication::primaryScreen()->grabWindow(0);
 
     QPixmap temp = capture.scaled(ui->labelScreenShot->size());
     ui->labelScreenShot->setPixmap(temp);

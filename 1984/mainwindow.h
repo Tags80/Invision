@@ -7,7 +7,6 @@
 #include <QStandardPaths>
 #include <QSystemTrayIcon>
 #include <QDir>
-#include "grabbers/standardscreencapture.h"
 #include "videocapture.h"
 
 namespace Ui {
