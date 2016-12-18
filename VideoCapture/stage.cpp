@@ -29,9 +29,11 @@ QList<Actor *> Stage::getSources()
 
 QList<Stage *> Stage::getSavedStages()
 {
+    QList<Stage*> list;
     //get QDir.
     //get all files
     //parse xml and create stages
+    return list;
 }
 
 void Stage::writeToFile()

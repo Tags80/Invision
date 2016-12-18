@@ -2,11 +2,16 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QMessageBox>
 #include <QImageWriter>
 #include <QStandardPaths>
 #include <QSystemTrayIcon>
+#include <QDateTime>
+#include <QScreen>
 #include <QDir>
+#include <QDebug>
 #include "videocapture.h"
 
 namespace Ui {

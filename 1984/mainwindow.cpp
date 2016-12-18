@@ -119,14 +119,37 @@ void MainWindow::on_actionCapture_triggered()
 
 void MainWindow::shootScreen(){
     ui->stackedWidget->setCurrentIndex(0);
-    capture = QGuiApplication::primaryScreen()->grabWindow(0);
+    QDesktopWidget *widget = QApplication::desktop();
+    if(widget->isVirtualDesktop()){
+        capture = QGuiApplication::primaryScreen()->grabWindow(0);
+    }
+    else{
+        QList<QScreen*> screens = QGuiApplication::primaryScreen()->virtualSiblings();
+        QList<QPixmap> scrs;
+        int w = 0, h = 0, p = 0;
 
+        foreach (auto scr, screens)
+        {
+            QRect g = scr->geometry();
+            qDebug() << scr->name() << endl;
+            QPixmap pix = scr->grabWindow(0, g.x(), g.y(), g.width(), g.height());
+            w += pix.width();
+            h = qMax(h, pix.height());
+            scrs.append(pix);
+        }
+
+        QPixmap final(w, h);
+        QPainter painter(&final);
+        final.fill(Qt::black);
+        foreach (auto scr, scrs)
+        {
+            painter.drawPixmap(QPoint(p, 0), scr);
+            p += scr.width();
+        }
+        capture = final;
+    }
     QPixmap temp = capture.scaled(ui->labelScreenShot->size());
     ui->labelScreenShot->setPixmap(temp);
-
-    QString defaultFileName = "Screenshot From " + QDateTime::currentDateTime().toString();
-    defaultFileName.replace(":","-");
-    ui->lineEdit->setText(defaultFileName);
 
 
 }
