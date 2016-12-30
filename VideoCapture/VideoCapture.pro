@@ -62,7 +62,7 @@ win32 {
 
 unix:!macx{
 
-    LIBS += -lavcodec -lavfilter -lavformat -lavutil -lswscale
+    LIBS += -lavcodec -lavformat -lavutil -lswscale -lswresample -lavfilter
     !contains(QMAKE_TARGET.arch, x86_64) {
         message("x86 Linux Build")
 

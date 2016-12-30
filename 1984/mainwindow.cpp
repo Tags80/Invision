@@ -120,7 +120,7 @@ void MainWindow::on_actionCapture_triggered()
 void MainWindow::shootScreen(){
     ui->stackedWidget->setCurrentIndex(0);
     QDesktopWidget *widget = QApplication::desktop();
-    if(widget->isVirtualDesktop()){
+    if(!widget->isVirtualDesktop()){
         capture = QGuiApplication::primaryScreen()->grabWindow(0);
     }
     else{
@@ -151,6 +151,10 @@ void MainWindow::shootScreen(){
     QPixmap temp = capture.scaled(ui->labelScreenShot->size());
     ui->labelScreenShot->setPixmap(temp);
 
+    QString defaultFileName = "Screenshot From " + QDateTime::currentDateTime().toString();
+    defaultFileName.replace(":","-");
+    ui->lineEdit->setText(defaultFileName);
+
 
 }
 
@@ -174,6 +178,9 @@ void MainWindow::savePixmap()
     }
     else
         this->capture.save(absoluteFilePath);//check for overwrite.
+
+    ui->labelScreenShot->clear();
+    ui->lineEdit->clear();
 
 }
 
